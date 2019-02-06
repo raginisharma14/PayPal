@@ -13,16 +13,16 @@ def save_clean_data(sentences, filename):
 	print('Saved: %s' % filename)
 
 # load dataset
-raw_dataset = load_clean_sentences('english-german.pkl')
-
+raw_dataset = load_clean_sentences('english-english.pkl')
+print (raw_dataset[:40])
 # reduce dataset size
-n_sentences = 10000
+n_sentences = 3028
 dataset = raw_dataset[:n_sentences, :]
 # random shuffle
 shuffle(dataset)
 # split into train/test
-train, test = dataset[:9000], dataset[9000:]
+train, test = dataset[:2725], dataset[:303]
 # save
-save_clean_data(dataset, 'english-german-both.pkl')
-save_clean_data(train, 'english-german-train.pkl')
-save_clean_data(test, 'english-german-test.pkl')
+save_clean_data(dataset, 'english-english-both.pkl')
+save_clean_data(train, 'english-english-train.pkl')
+save_clean_data(test, 'english-english-test.pkl')

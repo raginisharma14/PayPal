@@ -5,19 +5,27 @@ from unicodedata import normalize
 from numpy import array
 
 # load doc into memory
-def load_doc(filename):
+def load_doc(filename1, filename2):
 	# open the file as read only
-	file = open(filename, mode='rt')
+	file = open(filename1, mode='rt')
 	# read all text
-	text = file.read()
+	text1 = file.read()
 	# close the file
 	file.close()
-	return text
+	file = open(filename2, mode='rt')
+
+	text2 = file.read()
+	file.close()
+	return text1, text2
 
 # split a loaded document into sentences
-def to_pairs(doc):
-	lines = doc.strip().split('\n')
-	pairs = [line.split('\t') for line in  lines]
+def to_pairs(docSource, docTarget):
+	linesSource = docSource.strip().split('\n')
+	linesTarget = docTarget.strip().split('\n')
+	#pairs = [line.split('\t') for line in  lines]
+	pairs = zip(linesSource, linesTarget)
+	print (pairs)
+
 	return pairs
 
 # clean a list of lines
@@ -28,8 +36,12 @@ def clean_pairs(lines):
 	# prepare translation table for removing punctuation
 	table = str.maketrans('', '', string.punctuation)
 	for pair in lines:
+		print ("LINE______________________________")
+		print (pair)
 		clean_pair = list()
 		for line in pair:
+			print ("PAIR.............................................")
+			print (line)
 			# normalize unicode characters
 			line = normalize('NFD', line).encode('ascii', 'ignore')
 			line = line.decode('UTF-8')
@@ -54,14 +66,15 @@ def save_clean_data(sentences, filename):
 	print('Saved: %s' % filename)
 
 # load dataset
-filename = 'deu.txt'
-doc = load_doc(filename)
+filename1 = 'source.txt'
+filename2 = 'target.txt'
+doc1, doc2= load_doc(filename1, filename2)
 # split into english-german pairs
-pairs = to_pairs(doc)
+pairs = to_pairs(doc1, doc2)
 # clean sentences
 clean_pairs = clean_pairs(pairs)
 # save clean pairs to file
-save_clean_data(clean_pairs, 'english-german.pkl')
+save_clean_data(clean_pairs, 'english-english.pkl')
 # spot check
-for i in range(100):
-	print('[%s] => [%s]' % (clean_pairs[i,0], clean_pairs[i,1]))
+#for i in range(100):
+#	print('[%s] => [%s]' % (clean_pairs[i,0], clean_pairs[i,1]))
